@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql2');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
+const path = require('path'); // Add this to handle file paths correctly
 
 const app = express();
 
@@ -12,17 +13,13 @@ app.use(cors());
 app.use(express.static('../client-side')); // Serve static files from client-side
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Database connection
-const db = mysql.createConnection({
+// Database connection using a connection pool
+const pool = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
-});
-
-db.connect(err => {
-    if (err) throw err;
-    console.log('Database connected!');
+    database: process.env.DB_NAME,
+    connectionLimit: 10 // Adjust this value as needed
 });
 
 // Create a Nodemailer transporter
@@ -70,7 +67,7 @@ app.post('/submit-request', (req, res) => {
     const issueTypes = Array.isArray(issue_type) ? issue_type.join(', ') : issue_type;
 
     const sql = 'INSERT INTO requests (staff_name, staff_id, department, issue_type, priority_level, description, landline_number) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    db.query(sql, [staff_name, staff_id, department, issueTypes, priority_level, description, landline_number], (err) => {
+    pool.query(sql, [staff_name, staff_id, department, issueTypes, priority_level, description, landline_number], (err) => { // Use pool.query instead of db.query
         if (err) {
             console.error('Error inserting request:', err);
             return res.status(500).send('Error submitting request');
@@ -81,7 +78,6 @@ app.post('/submit-request', (req, res) => {
         res.send('Request submitted successfully!');
     });
 });
-
 
 // Route to serve the admin page
 app.get('/admin', (req, res) => {
@@ -98,14 +94,14 @@ app.get('/api/requests', (req, res) => {
         const dateThreshold = new Date();
         dateThreshold.setDate(dateThreshold.getDate() - days);
         sql += ' WHERE created_at >= ?';
-        db.query(sql, [dateThreshold], (err, results) => {
+        pool.query(sql, [dateThreshold], (err, results) => { // Use pool.query instead of db.query
             if (err) {
                 return res.status(500).send('Error fetching requests');
             }
             res.json(results);
         });
     } else {
-        db.query(sql, (err, results) => {
+        pool.query(sql, (err, results) => { // Use pool.query instead of db.query
             if (err) {
                 return res.status(500).send('Error fetching requests');
             }
@@ -113,7 +109,6 @@ app.get('/api/requests', (req, res) => {
         });
     }
 });
-
 
 // Start the server
 const PORT = process.env.PORT || 3000;
