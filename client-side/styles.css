@@ -7,16 +7,30 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-image: url('./nahcoaviance_cover.jpeg'); /* Specify the path to your image */
-    background-size: cover; /* Cover the entire background */
-    background-position: center; /* Center the background image */
-    background-repeat: no-repeat; /* Do not repeat the image */
+    color: #333;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    color: #333; /* Text color for better readability */
-    height: 100vh; /* 
+    height: 100vh;
+    position: relative;
+    z-index: 1;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('./nahcoaviance_cover.jpeg'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(4px); /* Adjust the blur intensity here */
+    z-index: -1; 
+    opacity: 0.8; 
 }
 
 /* Header styling */
@@ -136,5 +150,4 @@ button:hover {
     h1 {
         font-size: 1.2em; /* Adjust header font size for mobile */
     }
-}
 }
