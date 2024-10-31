@@ -1,0 +1,140 @@
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('./nahcoaviance_cover.jpeg'); /* Specify the path to your image */
+    background-size: cover; /* Cover the entire background */
+    background-position: center; /* Center the background image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    color: #333; /* Text color for better readability */
+    height: 100vh; /* 
+}
+
+/* Header styling */
+.form-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: rgba(0, 51, 102, 0.8); /* Semi-transparent blue background */
+    color: white;
+    width: 100%;
+    max-width: 600px;
+    border-radius: 8px 8px 0 0;
+}
+
+.logo {
+    width: 70px;  /* Increased logo size */
+    height: auto;
+    margin-right: 25px;  /* Increased space from header text */
+}
+
+h1 {
+    font-size: 1.5em;
+    margin-left: 15px;  /* Optional: Adds space from the logo */
+}
+
+/* Form styling */
+main {
+    width: 100%;
+    max-width: 600px;
+    background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white for form background */
+    border: 1px solid #e0e0e0;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    color: #003366; /* Blue */
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input, select, textarea, button {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 1em;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #003366;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 51, 102, 0.2);
+}
+
+button {
+    background-color: #ffcc00; /* Yellow */
+    color: #003366; /* Blue */
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #e6b800; /* Darker yellow */
+}
+
+/* Styling for the checkbox group container */
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+    padding: 15px;  /* Padding inside the box */
+    background-color: white;
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 5px; /* Rounded corners for aesthetic */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Checkbox label styling */
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Checkbox styling */
+.checkbox-group input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+@media (max-width: 600px) {
+    .form-header, main {
+        width: 90%; /* Use a smaller width on mobile for better spacing */
+        margin: 10px auto; /* Center the form and add margin */
+    }
+    
+    .logo {
+        width: 50px; /* Adjust logo size for mobile */
+    }
+
+    h1 {
+        font-size: 1.2em; /* Adjust header font size for mobile */
+    }
+}
+}
