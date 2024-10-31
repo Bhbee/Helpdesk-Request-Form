@@ -36,7 +36,7 @@ const transporter = nodemailer.createTransport({
 
 // Function to send email notifications
 function sendEmailNotification(req) {
-    const { staff_name, staff_id, department, issue_type, priority, description, landline_number } = req.body;
+    const { staff_name, staff_id, department, issue_type, priority_level, description, landline_number } = req.body;
     const issueTypes = Array.isArray(issue_type) ? issue_type.join(', ') : issue_type;
 
     const mailOptions = {
@@ -49,7 +49,7 @@ function sendEmailNotification(req) {
             Staff ID: ${staff_id}
             Department: ${department}
             Issue Type: ${issueTypes}
-            Priority: ${priority}
+            Priority: ${priority_level}
             Description: ${description}
             Landline Number: ${landline_number}
         `,
@@ -66,11 +66,11 @@ function sendEmailNotification(req) {
 
 // Route to handle form submission
 app.post('/submit-request', (req, res) => {
-    const { staff_name, staff_id, department, issue_type, priority, description, landline_number } = req.body;
+    const { staff_name, staff_id, department, issue_type, priority_level, description, landline_number } = req.body;
     const issueTypes = Array.isArray(issue_type) ? issue_type.join(', ') : issue_type;
 
-    const sql = 'INSERT INTO requests (staff_name, staff_id, department, issue_type, priority, description, landline_number) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    db.query(sql, [staff_name, staff_id, department, issueTypes, priority, description, landline_number], (err) => {
+    const sql = 'INSERT INTO requests (staff_name, staff_id, department, issue_type, priority_level, description, landline_number) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    db.query(sql, [staff_name, staff_id, department, issueTypes, priority_level, description, landline_number], (err) => {
         if (err) {
             console.error('Error inserting request:', err);
             return res.status(500).send('Error submitting request');

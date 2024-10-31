@@ -12,7 +12,7 @@
         <h1>IT Helpdesk Request Form</h1>
     </header>
     <main>
-        <form id="requestForm" action="http://127.0.0.1:3000/submit-request" method="POST"> <!-- Ensure action points to the correct URL -->
+        <form id="requestForm" action="https://helpdesk-request-form-api.onrender.com/submit-request" method="POST"> <!-- Ensure action points to the correct URL -->
             <div class="form-group">
                 <label for="staff_name">Staff Name:</label>
                 <input type="text" id="staff_name" name="staff_name" required>
@@ -23,7 +23,7 @@
             </div>
             <div class="form-group">
                 <label for="department">Department:</label>
-                <select id="department" name="department">
+                <select id="department" name="department" required>
                     <option value="" disabled selected>Please select your department</option>
                     <option value="Legal">Legal</option>
                     <option value="Finance">Finance</option>
@@ -39,7 +39,6 @@
                     <option value="Gatepass">Gatepass</option>
                 </select>
             </div>
-            
             <div class="form-group">
                 <label for="issue_type">Issue Type:</label>
                 <div class="checkbox-group">
@@ -51,9 +50,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="priority">Priority:</label>
-                <select id="priority" name="priority">
-                    <option value="" disabled selected></option>
+                <label for="priority_level">Priority Level:</label>
+                <select id="priority_level" name="priority_level" required>
+                    <option value="" disabled selected>Please select priority level</option>
                     <option value="High">High</option>
                     <option value="Medium">Medium</option>
                     <option value="Low">Low</option>
@@ -74,12 +73,34 @@
 
     <script>
         document.getElementById('requestForm').addEventListener('submit', async (event) => {
+            // Check if all required fields are filled
+            const form = event.target;
+            const requiredFields = form.querySelectorAll('[required]');
+            let allFilled = true;
+
+            requiredFields.forEach(field => {
+                if (!field.value || (field.tagName === 'SELECT' && field.selectedIndex === 0)) {
+                    allFilled = false;
+                    field.classList.add('error'); // Optional: Highlight the empty field
+                } else {
+                    field.classList.remove('error'); // Remove highlight if filled
+                }
+            });
+
+            if (!allFilled) {
+                event.preventDefault(); // Prevent form submission
+                document.getElementById('message').innerText = 'Please fill in all required fields.';
+                document.getElementById('message').style.color = "red";
+                return;
+            }
+
             event.preventDefault(); // Prevent default form submission
 
-            const formData = new FormData(event.target);
+            const formData = new FormData(form);
             try {
-                const response = await fetch('http://127.0.0.1:3000/submit-request', {
+                const response = await fetch('https://helpdesk-request-form-api.onrender.com/submit-request',{
                     method: 'POST',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded',},
                     body: new URLSearchParams(formData),
                 });
 
@@ -87,7 +108,7 @@
                 if (response.ok) {
                     document.getElementById('message').innerText = result;
                     document.getElementById('message').style.color = "green";
-                    event.target.reset(); // Clear the form on success
+                    form.reset(); // Clear the form on success
                 } else {
                     throw new Error(result);
                 }
