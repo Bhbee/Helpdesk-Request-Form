@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Helpdesk Request Form</title>
     <link rel="stylesheet" href="styles.css"> <!-- Ensure this path is correct -->
+    <style>
+        .popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px;
+            background-color: #4CAF50; /* Green */
+            color: white;
+            border-radius: 5px;
+            z-index: 1000;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+    </style>
 </head>
 <body>
     <header class="form-header">
@@ -69,18 +82,17 @@
             <button type="submit">Submit Request</button>
         </form>
         <div id="message"></div>
+        <div id="popup" class="popup" style="display: none;">Submission Successful!</div>
     </main>
 
     <script>
         document.getElementById('requestForm').addEventListener('submit', async (event) => {
-            event.preventDefault(); // Prevent default form submission
-
-            const form = event.target;
-            const formData = new FormData(form);
-            
             // Check if all required fields are filled
+            const form = event.target;
+            const requiredFields = form.querySelectorAll('[required]');
             let allFilled = true;
-            form.querySelectorAll('[required]').forEach(field => {
+
+            requiredFields.forEach(field => {
                 if (!field.value || (field.tagName === 'SELECT' && field.selectedIndex === 0)) {
                     allFilled = false;
                     field.classList.add('error'); // Optional: Highlight the empty field
@@ -90,22 +102,25 @@
             });
 
             if (!allFilled) {
+                event.preventDefault(); // Prevent form submission
                 document.getElementById('message').innerText = 'Please fill in all required fields.';
                 document.getElementById('message').style.color = "red";
                 return;
             }
 
+            event.preventDefault(); // Prevent default form submission
+
+            const formData = new FormData(form);
             try {
-                const response = await fetch(form.action, {
+                const response = await fetch('https://helpdesk-request-form-api.onrender.com/submit-request', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams(formData)
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    body: new URLSearchParams(formData),
                 });
 
                 const result = await response.text();
                 if (response.ok) {
-                    document.getElementById('message').innerText = result;
-                    document.getElementById('message').style.color = "green";
+                    showSuccessPopup(); // Show the success pop-up
                     form.reset(); // Clear the form on success
                 } else {
                     throw new Error(result);
@@ -116,6 +131,15 @@
                 console.error('Error:', error);
             }
         });
+
+        function showSuccessPopup() {
+            const popup = document.getElementById('popup');
+            popup.style.display = 'block';
+            setTimeout(() => {
+                popup.style.display = 'none'; // Hide the pop-up after 2 seconds
+                location.reload(); // Refresh the page after hiding the pop-up
+            }, 2000); // Change duration as needed (2 seconds in this case)
+        }
     </script>
 </body>
 </html>
