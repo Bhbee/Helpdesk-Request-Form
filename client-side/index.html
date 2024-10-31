@@ -73,12 +73,14 @@
 
     <script>
         document.getElementById('requestForm').addEventListener('submit', async (event) => {
-            // Check if all required fields are filled
-            const form = event.target;
-            const requiredFields = form.querySelectorAll('[required]');
-            let allFilled = true;
+            event.preventDefault(); // Prevent default form submission
 
-            requiredFields.forEach(field => {
+            const form = event.target;
+            const formData = new FormData(form);
+            
+            // Check if all required fields are filled
+            let allFilled = true;
+            form.querySelectorAll('[required]').forEach(field => {
                 if (!field.value || (field.tagName === 'SELECT' && field.selectedIndex === 0)) {
                     allFilled = false;
                     field.classList.add('error'); // Optional: Highlight the empty field
@@ -88,20 +90,16 @@
             });
 
             if (!allFilled) {
-                event.preventDefault(); // Prevent form submission
                 document.getElementById('message').innerText = 'Please fill in all required fields.';
                 document.getElementById('message').style.color = "red";
                 return;
             }
 
-            event.preventDefault(); // Prevent default form submission
-
-            const formData = new FormData(form);
             try {
-                const response = await fetch('https://helpdesk-request-form-api.onrender.com/submit-request',{
+                const response = await fetch(form.action, {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded',},
-                    body: new URLSearchParams(formData),
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams(formData)
                 });
 
                 const result = await response.text();
