@@ -1,0 +1,3 @@
+During my time in the ICT Department at the Nigerian Aviation Handling Company (NAHCO), I recognized the importance of effective IT support for smooth operations in aircraft, cargo, and passenger handling. However, support requests were managed manually through emails and phone calls, resulting in disorganization, limited visibility into request statuses, and increased workload for the helpdesk team, ultimately delaying response times and affecting productivity.
+
+To address these challenges, I developed a Digital Helpdesk Request Form to simplify the submission and tracking of helpdesk requests, improve response times, enhance communication between employees and the ICT department, and minimize manual errors.
